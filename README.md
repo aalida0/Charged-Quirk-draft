@@ -6,4 +6,4 @@ LaTeX source for *Decaying charged quirks: terminating non-helical tracks from S
 - `refs.bib`: references verified so far; entries marked `note` still need checking
 - `figs/`: figures copied from `Charged-Quirk` (not yet populated)
 
-Status: outline only; every section other than the introduction is a TODO.
+Status: introduction, mass-dependence/production and recast sections drafted (numbers from Charged-Quirk, NLO+NLL-scaled recasts); turnaround window, conclusions, acknowledgments still TODO. Bib entries with a `note` still need checking.
