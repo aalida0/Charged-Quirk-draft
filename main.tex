@@ -11,16 +11,61 @@
 \affiliation{Laboratory of Material and Subatomic Physics, Faculty of Sciences, Ibn Tofail University, Kenitra, Morocco}
 
 \begin{abstract}
-TODO (write last). One sentence each: the model; the charged-to-neutral decay at tracker scale; the string-plus-decay signature; recasts and the turnaround window.
+We study quirks that sit in vector-like SU(2)$_L$ doublets or triplets. Their charged member decays to the neutral member plus a soft pion or lepton through the gauge-loop mass splitting, with a decay length of millimetres to centimetres, while the infracolor string stays attached. The charged track then terminates inside the tracker and, for string scales $\Lambda\gtrsim100$~eV, is not a helix. We add the decay step to a Geant4 quirk transport, simulate Drell--Yan and $W^*$-mediated production for $M=300$--$2000$~GeV, and recast public ATLAS searches with their HEPData maps and limits. A Dirac triplet is excluded up to about $0.64$--$0.74$~TeV for $\Lambda\le100$~eV (range between the uncalibrated and the wino-calibrated proxy), the sensitivity is gone at $\Lambda\simeq1$~keV, the doublet decays inside the pixel detector, and track-based searches for stable charged particles are not sensitive at the predicted decay lengths.
+% TODO: update numbers after the Delphes-based jet/MET treatment
 \end{abstract}
 
 \maketitle
 
 \section{Introduction}
-Quirks \cite{Okun:1980,KangLuty:2008}; existing searches treat the charged quirk as stable \cite{FarinaLow:2017,Knapen:2017,Vami:2026,FASER:2026}; weak decays of multiplet quirks exist only for microscopic strings \cite{Harnik:2011,ForsythLowTenney:2025}.
+Quirks are particles charged under a new confining gauge group, infracolor, with a confinement scale $\Lambda$ far below their mass $M$ and no light infracolored matter, so that the string between a produced quirk and antiquirk does not break and stretches over macroscopic distances \cite{Okun:1980,KangLuty:2008}. Existing collider searches and recasts treat the charged quirk as stable \cite{FarinaLow:2017,Knapen:2017,Vami:2026,FASER:2026}; to our knowledge, decays of the charged member of an electroweak multiplet have been studied only for microscopic strings \cite{Harnik:2011,ForsythLowTenney:2025}.
 
-\section{Model and charged-to-neutral decay}
-Doublet ($Y=1/2$) and triplet ($Y=0$) vector-like quirks; one-loop $\Delta m$; $Q^+\to Q^0 X$ width; $c\tau$ map (Fig.~\ref{fig:ctau}).
+Here the quirk sits in a vector-like SU(2)$_L$ doublet or triplet. Gauge loops split the charged and neutral members by $0.2$--$0.4$~GeV, so $Q^+\to Q^0 X$ with a soft pion or lepton $X$ and a decay length of order $1$--$10$~cm. The neutral member carries the same infracolor charge, so the string is not released: the visible track of the charged quirk ends inside the tracker, the pion is too soft to be reconstructed, and the neutral quirk continues, still attached to its partner. Since the string pulls on the charged leg before the decay, the track is helical only for small $\Lambda$; a standard disappearing-track search sees the signal in that case and may miss it otherwise.
+
+We (i) extend the Geant4 quirk transport of Refs.~\cite{QuirkPheno,Vami:2026} with the decay step and the string handover (Secs.~\ref{sec:model} and \ref{sec:transport}), (ii) map the regimes in $\Lambda$ and $c\tau$ for the terminating track (Sec.~\ref{sec:regimes}), (iii) add the mass dependence, the Drell--Yan and $W^*$ production and the NLO+NLL normalisation (Sec.~\ref{sec:mass}), and (iv) recast public ATLAS disappearing-track and heavy-stable-charged-particle searches using their published maps and limit curves (Sec.~\ref{sec:recast}). Code, samples and tables are in the companion repository \texttt{aalida0/Charged-Quirk}.
+
+\section{Model and charged-to-neutral decay}\label{sec:model}
+\subsection{Quirks and the string}
+We take an SU($N_{\rm ic}$) infracolor group with confinement scale $\Lambda\ll M$, one Dirac multiplet $Q$ in the fundamental of infracolor and no light infracolored fermions. A produced $Q\bar Q$ pair is connected by a flux tube of tension $T=\Lambda^2/\hbar c$, treated as a classical string with no breaking and no emission of infracolor glue, as in the transport we start from \cite{QuirkPheno,Vami:2026}. Numerically $T=4.6$, $51$, $4.6\times10^2$ and $5.1\times10^3$~GeV/m for $\Lambda=30$, $100$, $300$ and $1000$~eV, to be compared with the Lorentz force $0.30\,B$~GeV/m $=1.1$~GeV/m at $3.8$~T; only the component of the string force transverse to the velocity bends the track. A quirk of kinetic energy $E_{\rm kin}$ is stopped by the string after $\ell_s\sim E_{\rm kin}/T$, which for $E_{\rm kin}=276$~GeV (the median of our $500$~GeV sample) is $5.4$~m, $0.6$~m and $5$~cm at $\Lambda=100$, $300$ and $1000$~eV; the energy lost to the string over a decay length $L_d$ is therefore of order $T L_d$ (Sec.~\ref{sec:regimes}). The infracolor charge is not changed by an electroweak transition, so the string state before and after the decay is the same; the decay products are infracolor singlets.
+
+\subsection{Electroweak multiplets and the splitting}
+We consider the vector-like doublet ($T_I=\tfrac12$, $Y=\tfrac12$) and the vector-like triplet ($T_I=1$, $Y=0$), with charges $Q_{\rm em}=T_3+Y$, a Dirac mass $M$ and no renormalisable coupling to the Higgs doublet or mixing with Standard Model fermions, which infracolor gauge invariance forbids; the members are then degenerate at tree level. Mixing with a second infracolored multiplet, for instance singlet--doublet mixing, would add a tunable contribution to the splitting and is not considered here. Electroweak loops split the members \cite{ThomasWells:1998,Cirelli:2005}. In Feynman gauge, with the internal fermion of mass $M$, the shift of the member with $(T_3,Q_{\rm em})$ is
+\begin{equation}
+\delta M_i = M\sum_{V=W,Z,\gamma}\alpha_V C_V(i)\, f\!\left(\frac{m_V}{M}\right),\quad
+f(r)=-\frac{1}{2\pi}\int_0^1\!dx\,(2-x)\ln\!\left[(1-x)^2+x\,r^2\right],
+\label{eq:dm}
+\end{equation}
+with $\alpha_WC_W=\alpha_2\,[T_I(T_I+1)-T_3^2]$, $\alpha_ZC_Z=\alpha_2\,(T_3-Q_{\rm em}s_W^2)^2/c_W^2$ and $\alpha_\gamma C_\gamma=\alpha_2 s_W^2Q_{\rm em}^2$; the scale-dependent parts are common to all members and cancel in the difference $\Delta m=M_{Q^+}-M_{Q^0}$. For $M\gg m_W$ this reduces to
+\begin{equation}
+\delta M_i=-\frac{\alpha_2}{2}\left[m_W\big(T_I(T_I+1)-T_3^2\big)+\frac{m_Z}{c_W^2}\big(T_3-Q_{\rm em}s_W^2\big)^2\right].
+\label{eq:dmasym}
+\end{equation}
+For the triplet this gives $\Delta m=\tfrac12\alpha_2 m_W(1-c_W)=\alpha_2 m_W\sin^2(\theta_W/2)=167$~MeV (on-shell inputs, $\alpha=1/127.95$), for the doublet $356$~MeV. Finite-$M$ values are in Table~\ref{tab:model}. We do not include two-loop corrections, a few MeV; because the width depends strongly on $\Delta m$ close to the pion threshold ($\Gamma\propto\Delta m^{5.3}$ locally at $167$~MeV), a $3$~MeV shift changes $c\tau$ by about $10\%$. The doublet value is of the size found for a stable vector-like doublet lepton in Ref.~\cite{ThomasWells:1998}. Requiring $\Lambda\ll\Delta m$ (always satisfied for $\Lambda\le$~keV) the string does not affect the decay rate or kinematics.
+
+\subsection{Decay of the charged member}
+The charged member decays by $W^*$ emission, $Q^+\to Q^0\ell^+\nu$, $Q^0\pi^+$, $Q^0\pi^+\pi^0$. The heavy-quirk current is vector-like, so there is no axial coupling, and for $M\gg\Delta m$
+\begin{align}
+\Gamma(Q^+\!\to Q^0\pi^+) &= \frac{\kappa\,G_F^2|V_{ud}|^2f_\pi^2}{\pi}\,\Delta m^3\sqrt{1-\frac{m_\pi^2}{\Delta m^2}},\\
+\Gamma(Q^+\!\to Q^0\ell^+\nu_\ell) &= \frac{\kappa\,G_F^2\,\Delta m^5}{15\pi^3}\,F\!\left(\frac{m_\ell^2}{\Delta m^2}\right),
+\end{align}
+with $f_\pi=130$~MeV, $F\to1$ for $m_\ell\to0$ ($F$ is the phase-space integral with the lepton mass) and $\kappa=|\langle T_3'|T^\mp|T_3\rangle|^2=1$ (doublet), $2$ (triplet) the squared Clebsch--Gordan coefficient of the $W$ coupling. The $\pi\pi^0$ channel uses the Gounaris--Sakurai $\rho$ form factor and is below $10^{-3}$ of the total for both benchmarks; the channels are exclusive up to $\Delta m=0.8$~GeV and partonic above $1.5$~GeV, with an interpolation (about $20\%$ uncertainty) in between, so the benchmark values are not affected. Corrections of order $\Delta m/M$ come from the exact heavy-fermion tensor, included in the numbers below and in the Monte Carlo (Sec.~\ref{sec:transport}).
+
+\begin{table}[t]
+\caption{Splitting, decay length and branching fractions of the benchmark multiplets (Eq.~\ref{eq:dm}, exact kinematics, $\kappa=1,2$). The asymptotic values ($M\to\infty$ in Eq.~\ref{eq:dmasym}) are $356$~MeV, $6.2$~mm for the doublet and $167$~MeV, $54$~mm for the triplet, used for the $\Lambda$--$c\tau$ grid at $M=500$~GeV.}
+\label{tab:model}
+\begin{ruledtabular}
+\begin{tabular}{llcccc}
+ & $M$ (GeV) & $300$ & $500$ & $1000$ & $2000$\\
+\hline
+Doublet & $\Delta m$ (MeV) & $314$ & $329$ & $342$ & $349$\\
+        & $c\tau$ (mm) & $9.5$ & $8.1$ & $7.1$ & $6.7$\\
+Triplet & $\Delta m$ (MeV) & $164$ & $166$ & $167$ & $167$\\
+        & $c\tau$ (mm) & $59.5$ & $56.2$ & $54.6$ & $54.2$\\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+For the triplet at $M=500$~GeV the branching fractions are $97.7\%$ $\pi^\pm$, $2.1\%$ $e$ and $0.2\%$ $\mu$; for the doublet $92.6\%$ $\pi^\pm$, $4.6\%$ $e$ and $2.8\%$ $\mu$. Below the pion threshold only leptons contribute and the width falls by a large factor. In the static limit for the triplet ($\kappa=2$), $c\tau=9.0$~m at $\Delta m=0.13$~GeV, $0.11$~m at $0.15$~GeV, $24$~mm at $0.20$~GeV, $5.5$~mm at $0.30$~GeV and $1.0$~mm at $0.50$~GeV (Fig.~\ref{fig:ctau}). The gauge-loop triplet is therefore just above the threshold, at a decay length of order $5$~cm, and the doublet well above it, at a few millimetres. The charged and neutral members differ in momentum by $p^*/p\sim0.3$~mrad in a decay, so there is no visible kink: the signature is the termination of the heavy track, with a pion of about $90$~MeV in the quirk rest frame.
 
 \begin{figure}[t]
 \includegraphics[width=\columnwidth]{figs/ctau_map.png}
@@ -28,14 +73,12 @@ Doublet ($Y=1/2$) and triplet ($Y=0$) vector-like quirks; one-loop $\Delta m$; $
 \label{fig:ctau}
 \end{figure}
 
-For $M=500$~GeV the doublet has $\Delta m=356$~MeV and $c\tau=6.2$~mm; the triplet has $\Delta m=167$~MeV and, with the $\kappa=2$ of its normalisation, $c\tau=54$~mm, decaying to $\pi^\pm$ in 97.7\% of the cases.
-
-\section{String dynamics with a decay step}
+\section{String dynamics with a decay step}\label{sec:transport}
 We extend the Geant4 quirk transport of Refs.~\cite{QuirkPheno,Vami:2026} (Apache-2.0, pinned at commit \texttt{d91cb27}) with a discrete process for the charged quirks. The decay length is $\beta\gamma c\tau$, which is memoryless, so re-sampling when a suspended track resumes is exact. At the decay the parent is killed and the neutral quirk and the visible products are created at the same point. The string state of the parent (partner, stored string vectors, last four-velocity) is handed to the neutral daughter, so the partner is not released; only the final end of the daughter frees it. Decay kinematics are generated in the parent rest frame with exact two- and three-body phase space weighted by the squared matrix element (heavy-fermion tensor times lepton tensor for $\ell\nu$; $(k_1-k_2)^\mu(k_1-k_2)^\nu$ for $\pi\pi^0$), because Geant4's generic phase-space decay is numerically unreliable for $M-M_0\ll M$.
 
 Checks (500~GeV, $\Delta m=356$~MeV, 2000 leptonic decays): the proper decay time follows the input exponential (KS $p=0.04$ and $0.40$ for two seeds); four-momentum is conserved to float precision; the rest-frame mean energies are $173$--$181\pm3$~MeV for $e$ and $208\pm2$~MeV for $\mu$ against $177.9$ and $206.8$~MeV from the static-source spectrum. For the triplet (6000 decays) the single-pion momentum in the parent rest frame is $91.686$~MeV against $91.687$~MeV analytic, and the lifetime fit gives $53.6\pm0.7$~mm for an input of $53.9$~mm. The handover is validated in two ways. An identity test (the neutral daughter carrying the parent's identity reproduces the undecayed run) is exact. A field-free vacuum comparison of $300$ pairs at $\Lambda=300$~eV, $c\tau=300$~mm, $\Delta m=2$~MeV against the same kinematics with a neutral quirk from the start agrees in distribution (KS $p\ge0.99$ for the end energy, time, longitudinal position and maximum separation; paired mean differences $\le1.5\sigma$, i.e. $\lesssim3\times10^{-3}$ of the mean) but not event by event (median relative difference $10^{-3}$--$10^{-2}$, with tails). The same per-event spread appears between identity-decay runs whose decay points differ, and between an identity run and a run with no decay, so it comes from the step discretisation of the string integration, which a new decay point changes, and not from the handover.
 
-\section{Regimes in $\Lambda$}
+\section{Regimes in $\Lambda$}\label{sec:regimes}
 We simulate $13$~TeV Drell--Yan $Q^+Q^-$ pairs at $M=500$~GeV ($|\eta|<2.5$, leading order, NNPDF3.1-LUXqed through Pythia's internal set) in a generic CMS-like detector, for $\Lambda=10$--$3000$~eV and $c\tau=1$--$5000$~mm, with $2000$ charged quirks at each of the $42$ points (Fig.~\ref{fig:maps}); this grid uses the asymptotic $\Delta m$ and the triplet decay table throughout, the mass scan below uses the finite-$M$ splitting and the table of each representation.
 
 \begin{figure*}[t]
